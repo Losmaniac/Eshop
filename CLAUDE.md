@@ -133,3 +133,5 @@ Ask these in one message, with your proposed default in brackets, and wait for m
 - [ ] Lighthouse is 95 or better on mobile for all four categories.
 - [ ] README lets a non-developer deploy and configure the shop.
 - [ ] All user-facing text is in Czech, and every price shows as `1 000 Kč`.
+
+@AGENTS.md
