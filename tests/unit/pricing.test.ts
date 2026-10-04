@@ -76,3 +76,18 @@ describe("bundles", () => {
     expect(bundle.weightKg).toBeCloseTo(pit.weightKg + plateVariant.weightKg, 5);
   });
 });
+
+describe("catalog helpers", () => {
+  it("shows only the images of the selected motif", async () => {
+    const { getProduct, imagesFor } = await import("@/lib/catalog");
+    const art = getProduct("nastenna-dekorace")!;
+    const images = imagesFor(art, { Motiv: "Mapa Česka", Velikost: "1 200 mm" });
+    expect(images.map((i) => i.src)).toEqual(["/images/products/wall-mapa.webp"]);
+  });
+
+  it("finds the bundle for a fire pit", async () => {
+    const { bundlesContaining } = await import("@/lib/catalog");
+    expect(bundlesContaining("skladaci-ohniste").map((b) => b.slug)).toEqual(["set-ohniste-a-plat"]);
+    expect(bundlesContaining("nastenna-dekorace")).toEqual([]);
+  });
+});

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { settings } from "@/content/settings";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { CartProvider } from "@/components/cart/CartProvider";
@@ -8,13 +8,12 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter", display: "swap" });
-// One static weight for headings keeps the font download small. It is not
-// preloaded so it does not compete with the hero image.
-const fraunces = Fraunces({
+const geist = Geist({ subsets: ["latin", "latin-ext"], variable: "--font-geist", display: "swap" });
+// Mono is used only for small labels; not preloaded so it never delays the hero.
+const geistMono = Geist_Mono({
   subsets: ["latin", "latin-ext"],
-  weight: "500",
-  variable: "--font-fraunces",
+  weight: ["400", "500"],
+  variable: "--font-geist-mono",
   display: "swap",
   preload: false,
 });
@@ -28,11 +27,11 @@ export const metadata: Metadata = {
   openGraph: { type: "website", locale: "cs_CZ", siteName: settings.shopName },
 };
 
-export const viewport: Viewport = { themeColor: "#f7f5f2" };
+export const viewport: Viewport = { themeColor: "#0e0d0c" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="cs" className={`${inter.variable} ${fraunces.variable}`}>
+    <html lang="cs" className={`${geist.variable} ${geistMono.variable}`}>
       <body className="flex min-h-dvh flex-col">
         <a
           href="#obsah"

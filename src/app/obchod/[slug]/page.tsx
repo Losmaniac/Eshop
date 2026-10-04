@@ -3,11 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { settings } from "@/content/settings";
 import { JsonLd } from "@/components/JsonLd";
-import { Notice } from "@/components/Notice";
-import { AddToCart } from "@/components/product/AddToCart";
-import { Gallery } from "@/components/product/Gallery";
+import { ProductCard } from "@/components/ProductCard";
+import { AccordionItem } from "@/components/product/Accordion";
+import { ProductView } from "@/components/product/ProductView";
 import { SpecTable } from "@/components/product/SpecTable";
-import { catalog, getProduct, lowestPrice } from "@/lib/catalog";
+import { catalog, getProduct, relatedProducts } from "@/lib/catalog";
 import { formatPrice, formatWorkingDays } from "@/lib/format";
 import { asset } from "@/lib/site";
 
@@ -39,7 +39,6 @@ export default async function ProductPage(props: PageProps<"/obchod/[slug]">) {
   if (!product) notFound();
 
   const siteUrl = process.env.SITE_URL || "http://localhost:3000";
-  const price = lowestPrice(product);
   const specs: [string, string][] = [
     ["Materiál", product.material],
     ["Tloušťka", product.thickness],
@@ -78,10 +77,13 @@ export default async function ProductPage(props: PageProps<"/obchod/[slug]">) {
           areaServed: "CZ",
         };
 
+  const related = relatedProducts(product.slug);
+  const courier = settings.shipping.methods.find((m) => m.id === "courier");
+
   return (
-    <div className="container-page py-8 md:py-12">
+    <div className="container-page py-6 md:py-10">
       <JsonLd data={jsonLd} />
-      <nav aria-label="Drobečková navigace" className="text-sm text-muted">
+      <nav aria-label="Drobečková navigace" className="mb-6 font-mono text-xs uppercase tracking-wider text-muted">
         <Link href="/obchod" className="hover:text-rust-dark">
           Obchod
         </Link>
@@ -89,87 +91,64 @@ export default async function ProductPage(props: PageProps<"/obchod/[slug]">) {
         <span aria-current="page">{product.name}</span>
       </nav>
 
-      <div className="mt-6 grid gap-10 lg:grid-cols-12 lg:gap-12">
+      <ProductView slug={product.slug} />
+
+      <div className="mt-20 grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-7">
-          <Gallery images={product.images} name={product.name} />
-        </div>
-
-        <div className="lg:col-span-5">
-          <h1 className="text-4xl md:text-5xl">{product.name}</h1>
-          <p className="mt-4 text-lg text-muted">{product.shortDescription}</p>
-
-          <div className="mt-8">
-            {product.orderType === "cart" ? (
-              <AddToCart slug={product.slug} />
-            ) : (
-              <div className="space-y-5">
-                {price !== undefined && (
-                  <p>
-                    <span className="text-3xl font-medium tabular-nums">od {formatPrice(price)}</span>
-                    <span className="mt-1 block text-sm text-muted">Cena podle velikosti, materiálu a uchycení.</span>
-                  </p>
-                )}
-                <Link href="/poptavka" className="btn btn-primary w-full">
-                  Poptat realizaci
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {product.notices && product.notices.length > 0 && (
-            <div className="mt-8 space-y-3">
-              {product.notices.map((notice) => (
-                <Notice key={notice.title} notice={notice} />
-              ))}
-            </div>
-          )}
-
-          {product.features && (
-            <ul className="mt-8 space-y-2 text-[0.9375rem]">
-              {product.features.map((feature) => (
-                <li key={feature} className="flex gap-3">
-                  <span aria-hidden="true" className="mt-2.5 h-px w-3 shrink-0 bg-rust" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-16 grid gap-12 border-t border-line pt-12 lg:grid-cols-12">
-        <section className="lg:col-span-7" aria-labelledby="description-title">
-          <h2 id="description-title" className="text-2xl">
-            Popis
-          </h2>
-          <div className="mt-4 max-w-2xl space-y-4">
-            {product.description.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-          {product.care && product.care.length > 0 && (
-            <>
-              <h2 className="mt-10 text-2xl">Péče a použití</h2>
-              <ul className="mt-4 max-w-2xl space-y-3">
-                {product.care.map((line) => (
-                  <li key={line} className="flex gap-3">
-                    <span aria-hidden="true" className="mt-3 h-px w-3 shrink-0 bg-rust" />
-                    {line}
-                  </li>
+          <h2 className="sr-only">Podrobnosti</h2>
+          <div className="border-t border-line">
+            <AccordionItem title="Popis" open>
+              <div className="space-y-4">
+                {product.description.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
                 ))}
+              </div>
+            </AccordionItem>
+            <AccordionItem title="Parametry">
+              <SpecTable rows={specs} />
+            </AccordionItem>
+            {product.care && product.care.length > 0 && (
+              <AccordionItem title="Péče a použití">
+                <ul className="space-y-3">
+                  {product.care.map((line) => (
+                    <li key={line} className="flex gap-3">
+                      <span aria-hidden="true" className="mt-3 h-px w-3 shrink-0 bg-rust" />
+                      {line}
+                    </li>
+                  ))}
+                </ul>
+              </AccordionItem>
+            )}
+            <AccordionItem title="Doprava a platba">
+              <ul className="space-y-2">
+                <li>Osobní odběr v dílně zdarma, po domluvě.</li>
+                {courier && (
+                  <li>
+                    Kurýr po ČR od {formatPrice(courier.rates[0].price)} podle hmotnosti. Velké kusy posíláme na paletě.
+                  </li>
+                )}
+                <li>Platba převodem nebo QR kódem. Výrobu zahájíme po připsání platby.</li>
               </ul>
-            </>
-          )}
-        </section>
-        <section className="lg:col-span-5" aria-labelledby="specs-title">
-          <h2 id="specs-title" className="text-2xl">
-            Parametry
-          </h2>
-          <div className="mt-4">
-            <SpecTable rows={specs} />
+            </AccordionItem>
           </div>
-        </section>
+        </div>
       </div>
+
+      <section aria-labelledby="related-title" className="mt-24">
+        <div className="flex items-end justify-between gap-4">
+          <h2 id="related-title" className="text-3xl">
+            Mohlo by se vám líbit
+          </h2>
+          <Link href="/obchod" className="link text-[0.9375rem]">
+            Celý obchod
+          </Link>
+        </div>
+        <div className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {related.map((p) => (
+            <ProductCard key={p.slug} product={p} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

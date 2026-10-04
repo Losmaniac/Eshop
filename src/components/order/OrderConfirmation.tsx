@@ -1,18 +1,26 @@
 import { formatDate, formatPrice } from "@/lib/format";
 import type { OrderView } from "@/lib/order-types";
+import { Steps } from "@/components/Steps";
 import { PaymentBlock } from "./PaymentBlock";
 
 export function OrderConfirmation({ order, qrSvg, demo }: { order: OrderView; qrSvg?: string; demo?: boolean }) {
   const paid = !["new", "awaiting_payment", "cancelled"].includes(order.status);
+  const progress = { new: 1, awaiting_payment: 1, paid: 2, in_production: 2, shipped: 3, done: 4, cancelled: 0 }[order.status];
   return (
     <div className="container-page py-12 md:py-16">
       <p className="eyebrow">Objednávka č. {order.orderNumber}</p>
-      <h1 className="mt-3 text-display-sm md:text-display">Děkujeme za objednávku</h1>
+      <h1 className="mt-3 text-display">Děkujeme za objednávku</h1>
       <p className="mt-4 max-w-2xl text-lg text-muted">
         {demo
           ? "Toto je ukázka. V ostrém provozu by vám teď přišel potvrzovací e-mail s platebními údaji."
           : `Platební údaje najdete níže a posíláme je také na ${order.customer.email}.`}
       </p>
+
+      {order.status !== "cancelled" && (
+        <div className="mt-8">
+          <Steps steps={["Přijato", "Platba", "Výroba", "Odesláno"]} current={progress} label="Stav objednávky" />
+        </div>
+      )}
 
       <div className="mt-10 grid gap-10 lg:grid-cols-12">
         <div className="lg:col-span-7">

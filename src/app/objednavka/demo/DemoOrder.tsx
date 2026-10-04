@@ -16,7 +16,7 @@ export function DemoOrder() {
   if (order === null) {
     return (
       <div className="container-page py-16">
-        <h1 className="text-display-sm">Objednávka nenalezena</h1>
+        <h1 className="text-display">Objednávka nenalezena</h1>
         <p className="mt-4 text-muted">V tomto prohlížeči není uložená žádná ukázková objednávka.</p>
         <Link href="/obchod" className="btn btn-outline mt-8">
           Do obchodu

@@ -87,7 +87,7 @@ export function InquiryForm({ defaultProjectType }: { defaultProjectType?: strin
     <form onSubmit={onSubmit} noValidate className="relative space-y-10">
       <Honeypot />
       <fieldset className="space-y-5">
-        <legend className="mb-5 font-display text-2xl">Kontakt</legend>
+        <legend className="mb-5 text-2xl font-semibold tracking-tight">Kontakt</legend>
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField name="name" label="Jméno a příjmení" autoComplete="name" error={errors.name} />
           <TextField name="company" label="Firma" optional autoComplete="organization" error={errors.company} />
@@ -97,7 +97,7 @@ export function InquiryForm({ defaultProjectType }: { defaultProjectType?: strin
       </fieldset>
 
       <fieldset className="space-y-5">
-        <legend className="mb-5 font-display text-2xl">Projekt</legend>
+        <legend className="mb-5 text-2xl font-semibold tracking-tight">Projekt</legend>
         <div className="grid gap-5 sm:grid-cols-2">
           <SelectField
             name="projectType"

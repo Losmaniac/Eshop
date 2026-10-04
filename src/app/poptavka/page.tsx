@@ -19,7 +19,7 @@ export default function InquiryPage() {
       <div className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <p className="eyebrow">Poptávka</p>
-          <h1 className="mt-3 text-display-sm md:text-display">Logo nebo nápis na míru</h1>
+          <h1 className="mt-3 text-display">Logo nebo nápis na míru</h1>
           <p className="mt-5 text-lg text-muted">
             Logo na fasádu, nápis na recepci nebo cedule u vchodu. Řežeme z nerezu, hliníku, oceli i corten oceli v
             tloušťce 3–5 mm.

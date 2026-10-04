@@ -109,7 +109,7 @@ export function CheckoutForm() {
       <Honeypot />
       <div className="space-y-10 lg:col-span-7">
         <fieldset className="space-y-5">
-          <legend className="mb-5 font-display text-2xl">Kontaktní údaje</legend>
+          <legend className="mb-5 text-2xl font-semibold tracking-tight">Kontaktní údaje</legend>
           <TextField name="name" label="Jméno a příjmení" autoComplete="name" error={errors.name} />
           <div className="grid gap-5 sm:grid-cols-2">
             <TextField name="email" type="email" label="E-mail" autoComplete="email" error={errors.email} />
@@ -119,7 +119,7 @@ export function CheckoutForm() {
         </fieldset>
 
         <fieldset>
-          <legend className="mb-5 font-display text-2xl">Doručení</legend>
+          <legend className="mb-5 text-2xl font-semibold tracking-tight">Doručení</legend>
           <div className="space-y-3">
             {settings.shipping.methods.map((m) => {
               const price = priced && m.id === deliveryMethod ? priced.shipping : undefined;
@@ -162,7 +162,7 @@ export function CheckoutForm() {
         </fieldset>
 
         <fieldset className="space-y-5">
-          <legend className="mb-5 font-display text-2xl">Poznámka</legend>
+          <legend className="mb-5 text-2xl font-semibold tracking-tight">Poznámka</legend>
           <TextArea name="note" label="Poznámka k objednávce" optional rows={3} error={errors.note} />
         </fieldset>
 

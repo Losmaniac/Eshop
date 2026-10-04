@@ -138,3 +138,25 @@ export function lowestPrice(product: CatalogProduct): number | undefined {
   if (product.orderType === "inquiry") return product.priceFrom;
   return Math.min(...product.variants.map((v) => v.price));
 }
+
+/** Images to show for the selected options: shared images plus the ones matching the variant. */
+export function imagesFor(product: CatalogProduct, options: Record<string, string>) {
+  const matching = product.images.filter(
+    (image) => !image.match || Object.entries(image.match).every(([name, value]) => options[name] === value),
+  );
+  // matching variant images first
+  return [...matching.filter((i) => i.match), ...matching.filter((i) => !i.match)];
+}
+
+/** Bundles that contain this product, for an upsell on its page. */
+export function bundlesContaining(slug: string): CatalogProduct[] {
+  const bundleSlugs = bundles.filter((b) => b.variants.some((v) => v.parts.some((p) => p.product === slug))).map((b) => b.slug);
+  return catalog.filter((p) => bundleSlugs.includes(p.slug));
+}
+
+/** Other products from the same category first, then the rest. */
+export function relatedProducts(slug: string, limit = 3): CatalogProduct[] {
+  const product = getProduct(slug);
+  const others = catalog.filter((p) => p.slug !== slug);
+  return [...others.filter((p) => p.category === product?.category), ...others.filter((p) => p.category !== product?.category)].slice(0, limit);
+}

@@ -26,6 +26,7 @@ Without `RESEND_API_KEY`, emails are only printed to the terminal. Without `DATA
 | `npm test` | Unit tests (prices, order number/VS, SPAYD, formatting) |
 | `npm run test:e2e` | End-to-end test: add to cart → checkout → confirmation with QR |
 | `npm run lint`, `npm run typecheck` | Code checks |
+| `npm run render` | Re-render the product images from the 3D models (see below) |
 
 ## Two build modes
 
@@ -86,7 +87,20 @@ The bank account values in `.env.example` are the sample account from the Czech 
   - Do not change variant `id`s once orders exist; old orders refer to them.
   - To turn personalization on or off for a product, add or remove its `personalization` block (`maxLength`, optional `price`).
 - **Shop settings:** `src/content/settings.ts`. This holds the shop name, seller details (shown on the contact and legal pages and in emails), shipping methods and prices by weight, the global personalization switch, and the default payment due period.
-- **Images:** put files in `public/images/` and reference them as `/images/name.webp`. Use landscape photos around 1 600 px wide; they are cropped to 4:3. The current photos are temporary stock images, credited on `/zdroje-fotografii`. When you replace them, remove the credits page and its footer link.
+- **Images:** files live in `public/images/`; reference them as `/images/name.webp`. Landscape images around 1 600 px wide work best (cropped to 4:3). An image can be tied to a variant with `match`, e.g. `{ src: "...", alt: "...", match: { Motiv: "Mapa Česka" } }`; it is then shown only when that option is selected.
+
+## Product images and the 3D view
+
+The product images in `public/images/products/` are renders of 3D models of the products, not photos. The models live in `src/three/`:
+
+- `models.ts`: the geometry. Each part is an extruded flat outline, just like the laser-cut part (grill plate ring, the four slot-together fire pit panels, the wall art motifs, the façade letters).
+- `materials.ts`: procedural corten, steel, stainless and plaster textures (generated in the browser, no texture files).
+- `scenes.ts`: the studio, evening fire, wall and façade scenes and the list of image shots.
+- `viewer.ts`: the interactive 3D view on product pages. It is loaded only after the visitor clicks "Zobrazit ve 3D", and it follows the selected variant.
+
+After changing a model or adding a shot, run `npm run render` (or `npm run render -- hero plate-studio` for specific shots). It needs Chromium (`npx playwright install chromium`) and ImageMagick. When you have real photos, just replace the files or change the paths in `products.ts`; the 3D view keeps working.
+
+The Czech border for the map motif comes from Natural Earth (public domain); the sample logo uses Inter Tight (SIL Open Font License). The laser-cutting photos are credited on `/zdroje-fotografii`.
 
 ## Orders
 

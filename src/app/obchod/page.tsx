@@ -18,7 +18,7 @@ export default function ShopPage() {
 
   return (
     <div className="container-page py-12 md:py-16">
-      <h1 className="text-display-sm md:text-display">Obchod</h1>
+      <h1 className="text-display">Obchod</h1>
       <p className="mt-4 max-w-xl text-lg text-muted">
         Všechno řežeme laserem z plochého plechu. Ohniště a pláty posíláme naplocho, loga a nápisy vyrábíme na míru.
       </p>

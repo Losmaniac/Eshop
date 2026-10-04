@@ -17,7 +17,7 @@ export default function AboutPage() {
       <div className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-6">
           <p className="eyebrow">O nás</p>
-          <h1 className="mt-3 text-display-sm md:text-display">Malá dílna, přesný laser</h1>
+          <h1 className="mt-3 text-display">Malá dílna, přesný laser</h1>
           <div className="mt-6 space-y-4 text-lg text-muted">
             <p>
               Jsme malá česká dílna s CNC laserem. Řežeme ploché díly z oceli, corten oceli, nerezu a hliníku – často ze
