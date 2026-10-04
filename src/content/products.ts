@@ -2,8 +2,8 @@
 // change products. Prices are in CZK including everything the customer pays
 // for the item itself (shipping is added at checkout).
 //
-// Images live in /public/images. Replace the files (or change the paths
-// below) when real product photos are ready.
+// Images live in /public/images. The product images are renders of the 3D
+// models (scripts/render). Replace them with photos when you have them.
 
 export type OrderType = "cart" | "inquiry";
 export type Category = "zahrada" | "interier" | "firmy";
@@ -11,6 +11,8 @@ export type Category = "zahrada" | "interier" | "firmy";
 export type ProductImage = {
   src: string;
   alt: string;
+  /** Show this image only when the selected variant has these options, e.g. { Motiv: "Mapa Česka" }. */
+  match?: Record<string, string>;
 };
 
 export type Variant = {
@@ -63,6 +65,8 @@ export type Product = {
   features?: string[];
   notices?: Notice[];
   care?: string[];
+  /** Show a size comparison with a person on the product page. */
+  sizeGuide?: boolean;
 };
 
 export type Bundle = {
@@ -109,7 +113,8 @@ export const products: Product[] = [
     orderType: "inquiry",
     category: "firmy",
     images: [
-      { src: "/images/corten-wall.webp", alt: "Laserem vyřezaný nápis v corten stěně" },
+      { src: "/images/products/sign-stainless.webp", alt: "Logo z broušeného nerezu na distančních trnech na fasádě" },
+      { src: "/images/products/sign-corten.webp", alt: "Logo z corten oceli na tmavé fasádě" },
       { src: "/images/laser-cutting.webp", alt: "Laserové řezání nerezového plechu" },
     ],
     material: "nerez, hliník, ocel, corten",
@@ -135,8 +140,9 @@ export const products: Product[] = [
     orderType: "cart",
     category: "interier",
     images: [
-      { src: "/images/wall-art-silhouettes.webp", alt: "Ocelové siluety postav vyřezané laserem" },
-      { src: "/images/corten-wall-2.webp", alt: "Corten ocel s vyřezaným vzorem" },
+      { src: "/images/products/wall-strom.webp", alt: "Strom života z corten oceli na stěně nad lavicí", match: { Motiv: "Strom života" } },
+      { src: "/images/products/wall-mapa.webp", alt: "Mapa Česka z corten oceli s vyřezanými městy", match: { Motiv: "Mapa Česka" } },
+      { src: "/images/products/wall-hory.webp", alt: "Silueta hor z corten oceli na stěně", match: { Motiv: "Silueta hor" } },
     ],
     material: "corten ocel",
     thickness: "2–3 mm",
@@ -157,6 +163,7 @@ export const products: Product[] = [
       price: 0,
     },
     leadTimeDays: 10,
+    sizeGuide: true,
     features: [
       "Jeden plochý díl, bez svarů",
       "Otvory pro zavěšení vyřezané v panelu",
@@ -178,8 +185,10 @@ export const products: Product[] = [
     orderType: "cart",
     category: "zahrada",
     images: [
-      { src: "/images/fire-pit.webp", alt: "Ocelové ohniště s hořícím ohněm" },
-      { src: "/images/plasma-cutting.webp", alt: "Řezání ocelového plechu" },
+      { src: "/images/products/pit-corten.webp", alt: "Skládací ohniště z corten oceli", match: { Materiál: "corten" } },
+      { src: "/images/products/pit-steel.webp", alt: "Skládací ohniště z oceli", match: { Materiál: "ocel" } },
+      { src: "/images/products/pit-fire.webp", alt: "Skládací ohniště s hořícím ohněm večer" },
+      { src: "/images/products/pit-flatpack.webp", alt: "Díly ohniště naplocho, jak přijdou v balíku" },
     ],
     material: "ocel S235 nebo corten",
     thickness: "4–5 mm",
@@ -211,7 +220,10 @@ export const products: Product[] = [
     ],
     orderType: "cart",
     category: "zahrada",
-    images: [{ src: "/images/grill-plate.webp", alt: "Kruhový ocelový grilovací plát (ilustrační obrázek)" }],
+    images: [
+      { src: "/images/products/plate-studio.webp", alt: "Kruhový grilovací plát z černé oceli s otvorem uprostřed" },
+      { src: "/images/products/plate-fire.webp", alt: "Grilovací plát položený na ohništi s ohněm" },
+    ],
     material: "černá ocel S235",
     thickness: "6–8 mm",
     variants: [
@@ -251,8 +263,9 @@ export const bundles: Bundle[] = [
     ],
     category: "zahrada",
     images: [
-      { src: "/images/fire-pit.webp", alt: "Ocelové ohniště s hořícím ohněm" },
-      { src: "/images/grill-plate.webp", alt: "Kruhový ocelový grilovací plát (ilustrační obrázek)" },
+      { src: "/images/products/set-studio.webp", alt: "Skládací ohniště s grilovacím plátem" },
+      { src: "/images/products/hero.webp", alt: "Ohniště s grilovacím plátem a ohněm večer" },
+      { src: "/images/products/pit-flatpack.webp", alt: "Díly ohniště naplocho, jak přijdou v balíku" },
     ],
     discountPercent: 10,
     leadTimeDays: 10,
